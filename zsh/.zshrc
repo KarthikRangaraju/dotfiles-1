@@ -136,6 +136,12 @@ if [ -n "$BUFFER" ];
 then
 BUFFER="git add -A; git commit -m \"$BUFFER\" && git push origin $(git rev-parse --abbrev-ref HEAD)"
 fi
+
+if [ -z "$BUFFER" ];
+then
+BUFFER="git add -A; git commit -v && git push origin $(git rev-parse --abbrev-ref HEAD)"
+fi
+
 zle accept-line
 }
 zle -N git_prepare
