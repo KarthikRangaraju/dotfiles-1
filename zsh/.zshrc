@@ -8,8 +8,10 @@ fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export TERM=xterm-256color
+
 # Path to your oh-my-zsh installation.
-export ZSH="/home/tilak/.oh-my-zsh"
+export ZSH="/Users/krangaraju/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -30,14 +32,13 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 # HYPHEN_INSENSITIVE="true"
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+# zstyle ':omz:update' frequency 13
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -52,8 +53,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
-# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
 # COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
@@ -83,6 +85,8 @@ plugins=(
     pip
     colorize
     vi-mode
+    zsh-autosuggestions
+    zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -112,19 +116,27 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-export PATH="$PATH:/usr/local/bin"
-export PATH="$PATH:/usr/local/bin/node/bin"
-export PATH="$PATH:/usr/local/bin/chromium"
-export PATH="$PATH:/usr/local/bin/java/jdk-11.0.11+9/bin"
-export PATH="$PATH:/home/tilak/.local/bin"
-export PATH="$PATH:/home/tilak/.local/share/gem/ruby/3.0.0/bin"
-export EDITOR=nvim
-export TERMINAL=konsole
-alias ls='colorls --sd -A --dark'
-alias tree='colorls --dark --tree'
-autoload -U promptinit; promptinit
+alias vi="nvim"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-source $(dirname $(gem which colorls))/tab_complete.sh
+# Fuzzy finder 
+if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
+  export PATH="$PATH:/usr/local/opt/fzf/bin"
+fi
+[[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.zsh" 2> /dev/null
+source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g "" 2> /dev/null'
+export FZF_CTRL_T_COMMAND='ag --hidden --ignore .git -l -g "" 2> /dev/null'
+
+# Custom keybindings
+function git_prepare() {
+if [ -n "$BUFFER" ];
+then
+BUFFER="git add -A; git commit -m \"$BUFFER\" && git push origin $(git rev-parse --abbrev-ref HEAD)"
+fi
+zle accept-line
+}
+zle -N git_prepare
+bindkey "^g" git_prepare
