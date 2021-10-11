@@ -1,3 +1,9 @@
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+Plug 'arcticicestudio/nord-vim'
+call plug#end()
+
+colorscheme nord
+
 set hidden
 set tabstop=8
 set softtabstop=4

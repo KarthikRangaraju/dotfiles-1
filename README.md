@@ -12,6 +12,7 @@ https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zs
 6. brew install tmux
 7. brew install fzf
 8. Install neovim: https://github.com/neovim/neovim/releases/tag/v0.5.1
+9. Install https://github.com/arcticicestudio/nord-vim and https://github.com/junegunn/vim-plug/wiki/tutorial to install nord theme to neovim.
 
 Use GNU stow to install these. If the file you are restoring exists, this will fail, so remove that file. Use stow <package-name> to restore the file.
   
